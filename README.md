@@ -1,6 +1,6 @@
-## Avalon / Resistance Type Game Mobile Webapp
+## Salad Bowl Type Game Mobile Webapp
 
-- Goal is to make a game that is similar to Avalon / Resistance that can be played with multiple phones connected over socket connection to the same Webapp
+- Goal is to make a game that is similar to Salad Bowl that can be played with multiple phones connected over socket connection to the same Webapp
 
 ## How to Use
 
