@@ -81,11 +81,13 @@
   color: rgb(106, 122, 129);
 }
 
-.NicknameButton {
+.NicknameButton,
+.PhraseButton {
   color: rgb(106, 122, 129);
 }
 
-.NicknameButton:focus, .NicknameButton:active, .NicknameButton.hover {
+.NicknameButton:focus, .NicknameButton:active, .NicknameButton:hover,
+.PhraseButton:focus, .PhraseButton:active, .PhraseButton:hover {
   outline: none !important;
   box-shadow: none;
   background: transparent;

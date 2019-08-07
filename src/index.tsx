@@ -7,4 +7,4 @@ import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";
 // require('../src/App.css');
 ReactDOM.render(<App />, document.getElementById("root"));
-registerServiceWorker();
+// registerServiceWorker();
