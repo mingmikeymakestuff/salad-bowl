@@ -1,9 +1,9 @@
 import { FaRegUser, FaUser } from 'react-icons/fa'
 import * as React from "react";
 import { connect } from "react-redux";
-import { getGameId, getPlayerCount, getPlayers, getPlayerData, getIncludes } from "../../selectors";
+import { getGameId, getPlayerCount, getPlayers, getPlayerData, getPhraseCount } from "../../selectors";
 import StartButton from "./StartButton";
-import { updateNickName } from "../../socket";
+import { updateNickName, addPhrase } from "../../socket";
 import MenuButton from './MenuButton';
 import { Player } from '../../types/types';
 
@@ -12,7 +12,7 @@ interface LobbyPropsFromState {
   playerCount: number;
   playerData: Player;
   playerList: Player[];
-  includes: boolean[];
+  phraseCount: number;
 }
 
 interface LobbyState {
@@ -26,13 +26,14 @@ class Lobby extends React.Component<LobbyPropsFromState, LobbyState> {
     super(props);
     this.state = { 
       value: "",
-      phrase: "",
       tooltip: false,
+      phrase: ""
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handlePhraseChange = this.handlePhraseChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handlePhraseChange = this.handlePhraseChange.bind(this);
+    this.handlePhraseClick = this.handlePhraseClick.bind(this);
   }
 
   // Changes in nickname input box reflected in value state
@@ -42,7 +43,7 @@ class Lobby extends React.Component<LobbyPropsFromState, LobbyState> {
   
   // Changes in phrase input box reflected in value state
   public handlePhraseChange(event) {
-    this.setState({ phrase: event.target.phrase });
+    this.setState({ phrase: event.target.value });
   }
 
   // On clicking update nick, checks if its between 1-7 characters and unique
@@ -61,7 +62,12 @@ class Lobby extends React.Component<LobbyPropsFromState, LobbyState> {
 
   // On clicking submit phrase
   public handlePhraseClick() {
-    const x = 5;
+    const phrase = this.state.phrase.trim()
+    if(phrase.length === 0) {
+      return;
+    }
+    addPhrase(this.state.phrase.trim());
+    this.setState({phrase: ""});
   }
 
   // Nickname input box display 
@@ -106,7 +112,7 @@ class Lobby extends React.Component<LobbyPropsFromState, LobbyState> {
   }
 
   public render() {
-    const { gameId, playerCount, includes } = this.props;
+    const { gameId, playerCount, phraseCount } = this.props;
     return (
       <div className="Lobby">
         <h3 style={{wordBreak:"break-all"}}><u>Game ID:<br/>{gameId}</u></h3>
@@ -125,6 +131,7 @@ class Lobby extends React.Component<LobbyPropsFromState, LobbyState> {
           </div>
           <br />
           <div>
+            <div>Total phrases: {phraseCount}</div>
             <div className="input-group mb-3">
               <input type="text" value={this.state.phrase} onChange={this.handlePhraseChange}
                       placeholder={this.getPhrase()} className="form-control" />
@@ -134,7 +141,7 @@ class Lobby extends React.Component<LobbyPropsFromState, LobbyState> {
             </div>
           </div>
         <div>
-          <StartButton playerCount={playerCount}/>
+          <StartButton phraseCount={phraseCount}/>
           <MenuButton />
         </div>
       </div>
@@ -152,7 +159,7 @@ const mapStateToProps = state => {
     playerCount: getPlayerCount(state),
     playerList,
     playerData,
-    includes: getIncludes(state)
+    phraseCount: getPhraseCount(state)
   };
 };
 

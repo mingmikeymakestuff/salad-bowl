@@ -10,10 +10,6 @@ class SingleRound extends React.Component<any, any> {
     {
       return <FaRegQuestionCircle className="RoundIcon card-img-top"/>;
     }
-    else if(this.props.value === TEAM.GOOD)
-    {
-      return <FaChessKnight className="Knight RoundIcon card-img-top"/>;
-    } 
     else
     {
       return <FaSkull className="Spy RoundIcon card-img-top"/>;

@@ -5,6 +5,7 @@ import {
   Player,
   GAME_STATUS,
   ROUND_STATUS,
+  ROUND_NUM,
 } from "./src/types/types";
 
 const port = process.env.PORT || 8888;
@@ -78,13 +79,11 @@ const createNewGame = () => {
     score: [0, 0],
     currentPlayerTurn: "",
     rounds: [
-      { id: 1, value: null, playersNeeded: 0, failsNeeded: 0 },
-      { id: 2, value: null, playersNeeded: 0, failsNeeded: 0 },
-      { id: 3, value: null, playersNeeded: 0, failsNeeded: 0 },
-      { id: 4, value: null, playersNeeded: 0, failsNeeded: 0 },
-      { id: 5, value: null, playersNeeded: 0, failsNeeded: 0 }
+      { id: ROUND_NUM.ONE},
+      { id: ROUND_NUM.TWO},
+      { id: ROUND_NUM.THREE}
     ],
-    votes: [0, 0],
+    phrases: [],
     roundStatus: ROUND_STATUS.SCORE_BOARD
   };
   gamesById[id] = game;
@@ -162,6 +161,13 @@ const nextPlayerTurn = socket => {
   game.currentPlayerTurn = game.players[nextPlayerIndex].socketId;
 }
 /* Player */
+
+/* Game */
+const addPhrase = (socket, phrase) => {
+  const game: Game = getGameBySocket(socket);
+  game.phrases.push(phrase);
+}
+/* Game */
 
 
 // Async timeout
@@ -248,7 +254,14 @@ io.on("connection", socket => {
     io.to(gameId).emit("UPDATE_GAME_STATE", getGameById(gameId));
   });
 
-// Main menu button will send player back to main menu and remove that player from game
+  // Updates nickname in lobby
+  socket.on("ADD_PHRASE", (phrase: string) => {
+    addPhrase(socket, phrase);
+    const gameId = getGameIdBySocket(socket);
+    io.to(gameId).emit("UPDATE_GAME_STATE", getGameById(gameId));
+  });
+
+  // Main menu button will send player back to main menu and remove that player from game
   socket.on("MAIN_MENU", () => {
     const gameId = getGameIdBySocket(socket);
     if (gameId && gamesById[gameId]) {

@@ -48,40 +48,18 @@ export const startGame = () => {
   socket.emit("START_GAME");
 };
 
-export const startGameIncludes = (includes : boolean[]) => {
-  console.log(`Client started game`);
-  socket.emit("START_GAME", includes);
+export const addPhrase = (phrase: string) => {
+  console.log(`Client added phrase: ${phrase}`);
+  socket.emit("ADD_PHRASE", phrase);
 };
 
 export const updateNickName = (nickName: string) => {
   socket.emit("UPDATE_NICKNAME", nickName);
 };
 
-export const pickPlayer = (socketId: string, selected: number) => {
-  socket.emit("PICK_PLAYER", socketId, selected);
-};
-
-export const proposeTeam = () => {
-  socket.emit("PROPOSE_TEAM");
-};
-
-export const killMerlin = () => {
-  socket.emit("KILL_MERLIN");
-};
-
-export const updateTeamVote = (vote: number, playerId: string) => {
-  socket.emit("UPDATE_TEAM_VOTE", vote, playerId);
-};
-
-export const updateMissionVote = (vote: number) => {
-  socket.emit("UPDATE_MISSION_VOTE", vote);
-};
-
 export const rejoinGame = (nickname: string) => {
   socket.emit("REJOIN_GAME", nickname);
 };
 
-export const updateIncludes = (index : number) => {
-  socket.emit("UPDATE_INCLUDES", index);
-};
+
 

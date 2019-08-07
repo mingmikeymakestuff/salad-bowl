@@ -1,7 +1,5 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { startGameIncludes } from "../../../socket";
-import { getIncludes } from '../../../selectors';
 
 class StartButton extends React.Component<any, any> {
   constructor(props) {
@@ -16,7 +14,8 @@ class StartButton extends React.Component<any, any> {
   }
     
   public handleClick() {
-    startGameIncludes(this.props.includes);
+    // to do
+    const x = 5
   }
 
   public render() {
@@ -24,10 +23,7 @@ class StartButton extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    includes: getIncludes(state)
-  };
-};
+
+const mapDispatchToProps = dispatch => ({});
  
-export default connect(mapStateToProps)(StartButton);
+export default connect(mapDispatchToProps)(StartButton);
