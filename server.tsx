@@ -77,12 +77,10 @@ const createNewGame = () => {
     status: GAME_STATUS.LOBBY,
     id,
     currentRound: 1,
-    score: [0, 0],
-    currentPlayerTurn: "",
     rounds: [
-      { id: ROUND_NUM.ONE},
-      { id: ROUND_NUM.TWO},
-      { id: ROUND_NUM.THREE}
+      { id: ROUND_NUM.TABOO_ROUND, score: [0,0], played: [false, false]},
+      { id: ROUND_NUM.CHARADE_ROUND, score: [0,0], played: [false, false]},
+      { id: ROUND_NUM.PASSWORD_ROUND, score: [0,0], played: [false, false]}
     ],
     phrases: [],
     roundStatus: ROUND_STATUS.SCORE_BOARD
@@ -116,7 +114,6 @@ const startGame = (gameId: string) => {
   const game: Game = gamesById[gameId];
   game.status = GAME_STATUS.IN_PROGRESS;
   game.roundStatus = ROUND_STATUS.SCORE_BOARD;
-  game.currentPlayerTurn = game.players[0].socketId;
   game.currentRound = ROUND_NUM.ONE;
   game.score = [0, 0];
 };
@@ -315,9 +312,6 @@ io.on("connection", socket => {
     if (gameId && gamesById[gameId]) {
       const playerList = gamesById[gameId].players
       const replacePlayer = playerList.find(player => player.nickName === nickName);
-      if (replacePlayer.socketId === gamesById[gameId].currentPlayerTurn) {
-        gamesById[gameId].currentPlayerTurn = socket.id;
-      }
       replacePlayer.socketId = socket.id;
       socket.emit("SET_SOCKET_ID", socket.id);
       io.to(gameId).emit("UPDATE_GAME_STATE", getGameById(gameId));

@@ -16,9 +16,9 @@ export enum ROUND_STATUS {
 }
 
 export enum ROUND_NUM {
-  ONE = 0,
-  TWO = 1,
-  THREE = 2,
+  TABOO_ROUND = 0,
+  CHARADE_ROUND = 1,
+  PASSWORD_ROUND = 2,
 }
 
 /* Voting and Team */
@@ -43,13 +43,14 @@ export interface Game {
   status?: GAME_STATUS;
   roundStatus?: ROUND_STATUS;
   currentRound: ROUND_NUM;
-  score: number[];
-  currentPlayerTurn: string;
+  rounds: Round[];
   phrases: string[];
 }
 
 export interface Round {
   id: ROUND_NUM;
+  score: number[];
+  played: boolean[]
 }
 
 export interface Player {
