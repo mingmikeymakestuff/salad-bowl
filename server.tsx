@@ -6,6 +6,7 @@ import {
   GAME_STATUS,
   ROUND_STATUS,
   ROUND_NUM,
+  TEAM,
 } from "./src/types/types";
 
 const port = process.env.PORT || 8888;
@@ -91,11 +92,12 @@ const createNewGame = () => {
 };
 
 const addPlayerToGame = (gameId, socket) => {
-  const game: Game = getGameById(gameId)
+  const game: Game = gamesById[gameId];
   if(game.status != GAME_STATUS.IN_PROGRESS) { 
     const player: Player = {
       socketId: socket.id,
-      nickName: `${getRandomName(7)}`,      
+      nickName: `${getRandomName(7)}`,
+      team: balanceTeams(gameId)     
     };
     socket.join(gameId);
     game.players.push(player);
@@ -110,13 +112,12 @@ const addPlayerToGame = (gameId, socket) => {
   }
 };
 
-const startGame = (gameId: string, includes: boolean[]) => {
+const startGame = (gameId: string) => {
   const game: Game = gamesById[gameId];
   game.status = GAME_STATUS.IN_PROGRESS;
   game.roundStatus = ROUND_STATUS.SCORE_BOARD;
-  game.players = shuffle(game.players);
   game.currentPlayerTurn = game.players[0].socketId;
-  game.currentRound = 1;
+  game.currentRound = ROUND_NUM.ONE;
   game.score = [0, 0];
 };
 
@@ -139,6 +140,18 @@ const shuffle = (players: Player[]): Player[] => {
 
   return players;
 };
+
+const balanceTeams = (gameId) => {
+  const game: Game = gamesById[gameId];
+  const numPlayers = game.players.length 
+  if(numPlayers === 0) {
+    return TEAM.ONE
+  }
+
+  const teamOne = game.players.filter(player => player.team === TEAM.ONE).length;
+  const teamTwo = numPlayers - teamOne;
+  return teamOne <= teamTwo ? TEAM.ONE : TEAM.TWO;
+}
 /* Init */
 
 /* Player */
@@ -238,11 +251,11 @@ io.on("connection", socket => {
     }
   });
 
-  // Starts game and assign roles
-  socket.on("START_GAME", (includes : boolean[]) => {
+  // Starts game 
+  socket.on("START_GAME", () => {
     const gameId = getGameIdBySocket(socket);
     if (gameId && gamesById[gameId]) {
-      startGame(gameId, includes);
+      startGame(gameId);
       io.to(gameId).emit("GAME_STARTING", getGameById(gameId));
     }
   });
@@ -254,9 +267,17 @@ io.on("connection", socket => {
     io.to(gameId).emit("UPDATE_GAME_STATE", getGameById(gameId));
   });
 
-  // Updates nickname in lobby
+  // Adds phrase to game
   socket.on("ADD_PHRASE", (phrase: string) => {
     addPhrase(socket, phrase);
+    const gameId = getGameIdBySocket(socket);
+    io.to(gameId).emit("UPDATE_GAME_STATE", getGameById(gameId));
+  });
+
+  // Switch team of player
+  socket.on("SWITCH_TEAM", () => {
+    const player: Player = getPlayerBySocket(socket)
+    player.team = player.team === TEAM.ONE ? TEAM.TWO : TEAM.ONE;
     const gameId = getGameIdBySocket(socket);
     io.to(gameId).emit("UPDATE_GAME_STATE", getGameById(gameId));
   });

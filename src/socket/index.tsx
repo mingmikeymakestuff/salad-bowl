@@ -48,6 +48,11 @@ export const startGame = () => {
   socket.emit("START_GAME");
 };
 
+export const switchTeam = () => {
+  socket.emit("SWITCH_TEAM");
+};
+
+
 export const addPhrase = (phrase: string) => {
   console.log(`Client added phrase: ${phrase}`);
   socket.emit("ADD_PHRASE", phrase);

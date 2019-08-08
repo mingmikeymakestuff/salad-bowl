@@ -3,9 +3,11 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { getGameId, getPlayerCount, getPlayers, getPlayerData, getPhraseCount } from "../../selectors";
 import StartButton from "./StartButton";
+import SwitchTeamButton from "./SwitchTeamButton";
+import RandomizeButton from "./RandomizeButton";
 import { updateNickName, addPhrase } from "../../socket";
 import MenuButton from './MenuButton';
-import { Player } from '../../types/types';
+import { Player, TEAM } from '../../types/types';
 
 interface LobbyPropsFromState {
   gameId: string;
@@ -102,44 +104,71 @@ class Lobby extends React.Component<LobbyPropsFromState, LobbyState> {
     return playerData.socketId === socketId ? <FaUser className="PlayerPicked" style={{fontSize:"1rem"}}/> : <FaRegUser style={{fontSize:"1rem"}}/>
   }
 
-  public playerList() {
+  public playerTables() {
     const { playerList } = this.props
-    return (playerList.map(player => (
-      <div className="col-6 col-lg-12" key={player.socketId}>
-        {this.playerSelf(player.socketId)}
-        {player.nickName}
-      </div>)));
+    const teamOnePlayers = playerList.filter(player => player.team === TEAM.ONE);
+    const teamOneTable = teamOnePlayers.map(player => (<tr key={player.socketId}><td>{this.playerSelf(player.socketId)}{player.nickName}</td></tr>))
+    const teamTwoPlayers = playerList.filter(player => player.team === TEAM.TWO);
+    const teamTwoTable = teamTwoPlayers.map(player => (<tr key={player.socketId}><td>{this.playerSelf(player.socketId)}{player.nickName}</td></tr>))
+    return ( 
+      <div className="row" style={{width:"75%", paddingBottom:"1rem"}}>      
+        <table className="table-sm table-bordered" style={{width:"50%", padding:"0"}}>
+          <thead>
+            <tr>
+              <th scope="col">Team One</th>
+            </tr>
+          </thead>
+          <tbody>
+            {teamOneTable}
+          </tbody>
+        </table>
+        <table className="table-sm table-bordered" style={{width:"50%", padding:"0"}}>
+          <thead>
+            <tr>
+              <th scope="col">Team Two</th>
+            </tr>
+          </thead>
+          <tbody>
+            {teamTwoTable}
+          </tbody>
+        </table>
+      </div>
+    );
   }
 
   public render() {
     const { gameId, playerCount, phraseCount } = this.props;
     return (
       <div className="Lobby">
-        <h3 style={{wordBreak:"break-all"}}><u>Game ID:<br/>{gameId}</u></h3>
-        <h4>{playerCount} player(s) connected: </h4>
+        <h4 style={{wordBreak:"break-all"}}><u>Game ID:<br/>{gameId}</u></h4>
+        <h5>{playerCount} player(s) connected: </h5>
+        <div>
+          <SwitchTeamButton />
+          <RandomizeButton />
+        </div>
         <br />
-        <div className="row" style={{width:"75%", paddingBottom:"1rem"}}>{this.playerList()}</div>
-          <div>
-            <div className="NickTooltip input-group mb-3">
-              <input type="text" value={this.state.value} onChange={this.handleChange}
-                    placeholder={this.getNick()} className="form-control" />
-              <div className="input-group-append">
-                <button type="button" className="NicknameButton btn btn-outline-secondary" onClick={this.handleClick}>Update Nickname</button>
-              </div>
-            </div>
-            {this.showNickTooltip()}
-          </div>
-          <br />
-          <div>
-            <div>Total phrases: {phraseCount}</div>
-            <div className="input-group mb-3">
-              <input type="text" value={this.state.phrase} onChange={this.handlePhraseChange}
-                      placeholder={this.getPhrase()} className="form-control" />
-              <div className="input-group-append">
-                <button type="button" className="PhraseButton btn btn-outline-secondary" onClick={this.handlePhraseClick}>Submit Phrase</button>
-              </div>
+        {this.playerTables()}
+        <div>
+          <div className="NickTooltip input-group mb-3">
+            <input type="text" value={this.state.value} onChange={this.handleChange}
+                  placeholder={this.getNick()} className="form-control" style={{fontSize: ".75rem"}}/>
+            <div className="input-group-append">
+              <button type="button" style={{fontSize: ".75rem"}} className="NicknameButton btn btn-outline-secondary" onClick={this.handleClick}>Update Nickname</button>
             </div>
           </div>
+          {this.showNickTooltip()}
+        </div>
+        <br />
+        <div>
+          <h5>Total phrases: {phraseCount}</h5>
+          <div className="input-group mb-3">
+            <input type="text" value={this.state.phrase} onChange={this.handlePhraseChange}
+                    placeholder={this.getPhrase()} className="form-control" style={{fontSize: ".75rem"}}/>
+            <div className="input-group-append">
+              <button type="button" style={{fontSize: ".75rem"}} className="PhraseButton btn btn-outline-secondary" onClick={this.handlePhraseClick}>Submit Phrase</button>
+            </div>
+          </div>
+        </div>
         <div>
           <StartButton phraseCount={phraseCount}/>
           <MenuButton />

@@ -55,4 +55,5 @@ export interface Round {
 export interface Player {
   socketId: string;
   nickName?: string;
+  team: TEAM;
 }
