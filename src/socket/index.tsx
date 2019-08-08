@@ -52,6 +52,9 @@ export const switchTeam = () => {
   socket.emit("SWITCH_TEAM");
 };
 
+export const randomizeTeams = () => {
+  socket.emit("RANDOMIZE_TEAMS");
+};
 
 export const addPhrase = (phrase: string) => {
   console.log(`Client added phrase: ${phrase}`);

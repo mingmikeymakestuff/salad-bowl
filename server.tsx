@@ -121,6 +121,19 @@ const startGame = (gameId: string) => {
   game.score = [0, 0];
 };
 
+const randomizeTeams = (socket) => {
+  const game: Game = getGameBySocket(socket);
+  const shuffledPlayers = shuffle(game.players)
+  let i = 0
+  for(i; i < Math.ceil(shuffledPlayers.length / 2); i++) {
+    shuffledPlayers[i].team = TEAM.ONE;
+  }
+  for(i; i < shuffledPlayers.length; i++) {
+    shuffledPlayers[i].team = TEAM.TWO;
+  }
+  game.players = shuffledPlayers;
+}
+
 const shuffle = (players: Player[]): Player[] => {
   let currentIndex = players.length;
   let temporaryValue;
@@ -164,15 +177,6 @@ const updatePlayerName = (socket, nickName) => {
   const player: Player = getPlayerBySocket(socket);
   player.nickName = nickName;
 };
-
-
-// Makes next player the current player
-const nextPlayerTurn = socket => {
-  const game: Game = getGameBySocket(socket);
-  const currPlayerIndex = game.players.findIndex(p => p.socketId === game.currentPlayerTurn);
-  const nextPlayerIndex = (currPlayerIndex + 1) % game.players.length;
-  game.currentPlayerTurn = game.players[nextPlayerIndex].socketId;
-}
 /* Player */
 
 /* Game */
@@ -278,6 +282,13 @@ io.on("connection", socket => {
   socket.on("SWITCH_TEAM", () => {
     const player: Player = getPlayerBySocket(socket)
     player.team = player.team === TEAM.ONE ? TEAM.TWO : TEAM.ONE;
+    const gameId = getGameIdBySocket(socket);
+    io.to(gameId).emit("UPDATE_GAME_STATE", getGameById(gameId));
+  });
+
+  // Switch team of player
+  socket.on("RANDOMIZE_TEAMS", () => {
+    randomizeTeams(socket);
     const gameId = getGameIdBySocket(socket);
     io.to(gameId).emit("UPDATE_GAME_STATE", getGameById(gameId));
   });

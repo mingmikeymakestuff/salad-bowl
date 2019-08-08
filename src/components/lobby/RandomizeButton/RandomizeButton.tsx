@@ -1,32 +1,19 @@
 import * as React from "react";
-import { connect } from "react-redux";
-import { startGame } from 'socket';
-import { getPhraseCount } from 'selectors';
+import { randomizeTeams } from 'socket';
 
-class StartButton extends React.Component<any, any> {
+class RandomizeButton extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
   }
-
-  public disableStart() {
-    const { phraseCount } = this.props;
-    return phraseCount <= 0
-  }
-    
+   
   public handleClick() {
-    startGame()
+    randomizeTeams()
   }
 
   public render() {
-    return <button type="button" className="btn btn-primary" style={{margin:"1rem"}} disabled={this.disableStart()} onClick={this.handleClick}>Start</button>;
+    return <button type="button" className="btn btn-secondary" style={{margin:"1rem"}}  onClick={this.handleClick}>Randomize Teams</button>;
   }
 }
-
-const mapStateToProps = state => {
-  return {
-    phraseCount: getPhraseCount(state)
-  };
-};
  
-export default connect(mapStateToProps)(StartButton);
+export default RandomizeButton;
