@@ -56,6 +56,10 @@ export const randomizeTeams = () => {
   socket.emit("RANDOMIZE_TEAMS");
 };
 
+export const updateTimer = timer => {
+  socket.emit("UPDATE_TIMER", timer);
+};
+
 export const addPhrase = (phrase: string) => {
   console.log(`Client added phrase: ${phrase}`);
   socket.emit("ADD_PHRASE", phrase);

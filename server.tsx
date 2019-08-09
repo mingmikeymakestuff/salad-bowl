@@ -83,7 +83,9 @@ const createNewGame = () => {
       { id: ROUND_NUM.PASSWORD_ROUND, score: [0,0], played: [false, false]}
     ],
     phrases: [],
-    roundStatus: ROUND_STATUS.SCORE_BOARD
+    roundStatus: ROUND_STATUS.SCORE_BOARD,
+    phraseIndex: 0,
+    timer: 60
   };
   gamesById[id] = game;
   return id;
@@ -114,8 +116,7 @@ const startGame = (gameId: string) => {
   const game: Game = gamesById[gameId];
   game.status = GAME_STATUS.IN_PROGRESS;
   game.roundStatus = ROUND_STATUS.SCORE_BOARD;
-  game.currentRound = ROUND_NUM.ONE;
-  game.score = [0, 0];
+  game.currentRound = ROUND_NUM.TABOO_ROUND;
 };
 
 const randomizeTeams = (socket) => {
@@ -283,10 +284,18 @@ io.on("connection", socket => {
     io.to(gameId).emit("UPDATE_GAME_STATE", getGameById(gameId));
   });
 
-  // Switch team of player
+  // Randomize Teams
   socket.on("RANDOMIZE_TEAMS", () => {
     randomizeTeams(socket);
     const gameId = getGameIdBySocket(socket);
+    io.to(gameId).emit("UPDATE_GAME_STATE", getGameById(gameId));
+  });
+
+  // Switch team of player
+  socket.on("UPDATE_TIMER", (timer: number) => {
+    const gameId = getGameIdBySocket(socket);
+    const game: Game = getGameById(gameId)
+    game.timer = timer;
     io.to(gameId).emit("UPDATE_GAME_STATE", getGameById(gameId));
   });
 

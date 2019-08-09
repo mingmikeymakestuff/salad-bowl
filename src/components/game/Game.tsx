@@ -7,13 +7,9 @@ import {
   getPlayerData,
   getRoundStatus,
   getCurrentPage,
-  getScore,
+  getRounds
 } from "../../selectors";
-import { Player, ROUND_STATUS, ROUND_NUM, GAME_STATUS  } from "../../types/types";
-
-interface GameState {
-
-}
+import { Player, ROUND_STATUS, ROUND_NUM, GAME_STATUS, Round } from "../../types/types";
 
 interface GameStateProps {
   id: string;
@@ -21,7 +17,7 @@ interface GameStateProps {
   status?: GAME_STATUS;
   roundStatus?: ROUND_STATUS;
   currentRound: ROUND_NUM;
-  score: number[];
+  Rounds: Round[];
   phrases: string[];
 }
 
@@ -30,12 +26,6 @@ class Game extends React.Component<GameStateProps, any> {
   constructor(props) {
     super(props);
   }
-
-  public showAnnouncment () {
-    const { roundStatus, score } = this.props;
-    return (<span>test</span>);
-  }
-
 
   public render() {
     const { currentRound, roundStatus } = this.props;
@@ -57,7 +47,7 @@ const mapStateToProps = state => {
     playerData,
     roundStatus: getRoundStatus(state),
     status: getCurrentPage(state),
-    score: getScore(state),
+    Rounds: getRounds(state)
   };
 };
 

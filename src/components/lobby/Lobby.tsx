@@ -1,11 +1,11 @@
 import { FaRegUser, FaUser } from 'react-icons/fa'
 import * as React from "react";
 import { connect } from "react-redux";
-import { getGameId, getPlayerCount, getPlayers, getPlayerData, getPhraseCount } from "../../selectors";
+import { getGameId, getPlayerCount, getPlayers, getPlayerData, getPhraseCount, getTimer } from "../../selectors";
 import StartButton from "./StartButton";
 import SwitchTeamButton from "./SwitchTeamButton";
 import RandomizeButton from "./RandomizeButton";
-import { updateNickName, addPhrase } from "../../socket";
+import { updateNickName, addPhrase, updateTimer } from "../../socket";
 import MenuButton from './MenuButton';
 import { Player, TEAM } from '../../types/types';
 
@@ -15,12 +15,14 @@ interface LobbyPropsFromState {
   playerData: Player;
   playerList: Player[];
   phraseCount: number;
+  timer: number
 }
 
 interface LobbyState {
   value: string;
   tooltip: boolean;
   phrase: string;
+  disableStart: boolean;
 }
 
 class Lobby extends React.Component<LobbyPropsFromState, LobbyState> {
@@ -29,13 +31,15 @@ class Lobby extends React.Component<LobbyPropsFromState, LobbyState> {
     this.state = { 
       value: "",
       tooltip: false,
-      phrase: ""
+      phrase: "",
+      disableStart: false
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handlePhraseChange = this.handlePhraseChange.bind(this);
     this.handlePhraseClick = this.handlePhraseClick.bind(this);
+    this.handleTimerChange = this.handleTimerChange.bind(this);
   }
 
   // Changes in nickname input box reflected in value state
@@ -46,6 +50,23 @@ class Lobby extends React.Component<LobbyPropsFromState, LobbyState> {
   // Changes in phrase input box reflected in value state
   public handlePhraseChange(event) {
     this.setState({ phrase: event.target.value });
+  }
+
+  // Changes in timer input box reflected in value state
+  public handleTimerChange(event) {
+    const changedTimer = parseInt(event.target.value, 10)
+    if(isNaN(changedTimer)) {
+      this.setState({disableStart: true})
+      updateTimer(null);
+    } else {
+      this.setState({disableStart: false})
+      updateTimer(changedTimer);
+    }
+  }
+
+  public computeTimerVal() {
+    const { timer } = this.props;
+    return timer === null ? '' : timer
   }
 
   // On clicking update nick, checks if its between 1-7 characters and unique
@@ -96,6 +117,13 @@ class Lobby extends React.Component<LobbyPropsFromState, LobbyState> {
     } 
   }
 
+  // Tooltip
+  public showTimerTooltip() {
+    if(this.state.disableStart) {
+      return (<span className="Warning" style={{fontSize: ".75rem"}}>Must be an integer</span>);
+    } 
+  }
+
   public playerSelf(socketId) {
     const { playerData } = this.props
     if(playerData === undefined) {
@@ -137,16 +165,14 @@ class Lobby extends React.Component<LobbyPropsFromState, LobbyState> {
   }
 
   public render() {
-    const { gameId, playerCount, phraseCount } = this.props;
+    const { gameId, phraseCount } = this.props;
     return (
       <div className="Lobby">
         <h4 style={{wordBreak:"break-all"}}><u>Game ID:<br/>{gameId}</u></h4>
-        <h5>{playerCount} player(s) connected: </h5>
         <div>
           <SwitchTeamButton />
           <RandomizeButton />
         </div>
-        <br />
         {this.playerTables()}
         <div>
           <div className="NickTooltip input-group mb-3">
@@ -170,7 +196,13 @@ class Lobby extends React.Component<LobbyPropsFromState, LobbyState> {
           </div>
         </div>
         <div>
-          <StartButton phraseCount={phraseCount}/>
+          <div>
+            <input type="text" id="timerBox" value={this.computeTimerVal()} onChange={this.handleTimerChange} maxLength={4} className="TimerInput form-control"/>
+            <span>Seconds per team</span>
+            <br/>
+            {this.showTimerTooltip()}
+          </div>
+          <StartButton disableStart={this.state.disableStart} phraseCount={phraseCount}/>
           <MenuButton />
         </div>
       </div>
@@ -188,7 +220,8 @@ const mapStateToProps = state => {
     playerCount: getPlayerCount(state),
     playerList,
     playerData,
-    phraseCount: getPhraseCount(state)
+    phraseCount: getPhraseCount(state),
+    timer: getTimer(state)
   };
 };
 

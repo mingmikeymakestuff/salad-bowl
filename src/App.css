@@ -26,61 +26,16 @@
 /* Main Screens */
 
 /* Components */
-.Role {
-  width: 100%;
-  border-top: 1px solid #000;
-  border-bottom: 1px solid #000;
-  color: black;
-  display: table;
-}
-
-.Legend {
-  text-align: center;
-  padding-top: 1rem;
-}
-
-.RoundResultItems,
-.PlayerListItems {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  padding-left: 0;
-}
-
-.RoundResult,
-.PlayerList {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.Round {
-  border-bottom: 1px solid #000;
-}
-
-.singleResult {
-  width: 2rem;
-  height: 3rem;
-  text-align: center;
-  justify-content: center;
-  font-size: 1.5em;
+.TimerInput{
+  margin-right: 1rem;
+  font-size: .75rem;
+  display: inline;
+  font-weight: bold;
+  width: 5rem;
 }
 /* Components */
 
 /* Buttons Start*/
-.RoleButton {
-  float: right;
-  font-size: 12px;
-  color: rgb(106, 122, 129);
-}
-
-.RoleButton:focus, .RoleButton:active, .RoleButton.hover {
-  outline: none !important;
-  box-shadow: none;
-  background: transparent;
-  color: rgb(106, 122, 129);
-}
-
 .NicknameButton,
 .PhraseButton {
   color: rgb(106, 122, 129);
@@ -94,116 +49,22 @@
   color: rgb(106, 122, 129);
 }
 
-.SelectTeamButton {
-  color: #28a745
-}
-
-.SelectTeamButton:focus, .SelectTeamButton:active, .SelectTeamButton:hover {
-  outline: none !important;
-  box-shadow: none;
-  background: transparent;
-  color: #28a745
-}
-
-.SuccessButton {
-  color: #28a745
-}
-
-.SuccessButton:focus, .SuccessTeamButton:active, .SuccessTeamButton:hover {
-  outline: none !important;
-  box-shadow: none;
-  background: transparent;
-  color: #28a745
-}
-
-.VotingButtons {
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.RejectButton {
-  color:tomato;
-  border-color: tomato;
-  outline-color: tomato;
-}
-
 .SideBySideButton {
   margin: 1rem;
   margin-bottom: 0;
 }
 /* Buttons End */
 
-/* Card */
-.PlayerCol {
-  padding: .5rem;
-}
-
-.RoundCol {
-  padding: 0;
-}
-
-.RoundCardBody
- {
-  padding: 0;
-}
-
-.PlayerCardBody {
-  padding: 1px;
-}
-
-.PlayerCard {
-  border: 0;
-  cursor: pointer;
-}
-
-.cardInfo,
-.LegendText,
-.NickTooltip {
-  font-size: 12px;
-  margin-bottom: 0 !important;
-}
-
-.RoundCurrentRound {
-  border-color: #28a745
-}
-/* Card */
-
 /* Font Awesome Icons */
-.Knight,
-.PlayerPicked,
-.Success {
+.PlayerPicked {
   color:rgb(15, 132, 228);
 }
 
-.Spy,
-.Fail,
-.Warning,
-.Thumbsdown {
+.Warning {
   color: tomato;
 }
-
-.Thumbsup {
-  color: #28a745
-}
-
-.RoundIcon {
-  font-size: 3rem;
-}
-
-.Iconsize {
-  font-size: 1rem;
-}
-
-.MissionVoteSize {
-  font-size: 2rem;
-}
-
-.Thumbsize {
-  font-size: 13px;
-}
 /* Font Awesome Icons */
+
 
 /* Misc */
 .App-logo {

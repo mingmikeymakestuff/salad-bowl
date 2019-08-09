@@ -5,7 +5,7 @@ import { mainMenu } from "../../../socket";
 class MenuButton extends React.Component<any, any> {
     public render() {
       const { onClick } = this.props;
-      return <button type="button" className="btn btn-primary" style={{margin:"1rem"}} onClick={onClick}>Main Menu</button>;
+      return <button type="button" className="btn btn-primary" style={{margin:"1rem", fontSize: ".75rem"}} onClick={onClick}>Main Menu</button>;
     }
 }
   

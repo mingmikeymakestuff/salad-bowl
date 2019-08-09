@@ -12,7 +12,7 @@ class RandomizeButton extends React.Component<any, any> {
   }
 
   public render() {
-    return <button type="button" className="btn btn-secondary" style={{margin:"1rem"}}  onClick={this.handleClick}>Randomize Teams</button>;
+    return <button type="button" className="btn btn-secondary" style={{margin:"1rem", fontSize: ".75rem"}}  onClick={this.handleClick}>Randomize</button>;
   }
 }
  

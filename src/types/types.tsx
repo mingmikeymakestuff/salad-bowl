@@ -43,8 +43,10 @@ export interface Game {
   status?: GAME_STATUS;
   roundStatus?: ROUND_STATUS;
   currentRound: ROUND_NUM;
-  rounds: Round[];
+  Rounds: Round[];
   phrases: string[];
+  phraseIndex: number;
+  timer: number;
 }
 
 export interface Round {

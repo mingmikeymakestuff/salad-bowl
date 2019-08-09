@@ -11,7 +11,7 @@ class StartButton extends React.Component<any, any> {
 
   public disableStart() {
     const { phraseCount } = this.props;
-    return phraseCount <= 0
+    return phraseCount <= 0 || this.props.disableStart
   }
     
   public handleClick() {
@@ -19,7 +19,7 @@ class StartButton extends React.Component<any, any> {
   }
 
   public render() {
-    return <button type="button" className="btn btn-primary" style={{margin:"1rem"}} disabled={this.disableStart()} onClick={this.handleClick}>Start</button>;
+    return <button type="button" className="btn btn-primary" style={{margin:"1rem", fontSize: ".75rem"}} disabled={this.disableStart()} onClick={this.handleClick}>Start</button>;
   }
 }
 
