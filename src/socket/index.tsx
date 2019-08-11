@@ -1,6 +1,7 @@
 import * as io from "socket.io-client";
 import { setGameData, navigateTo } from "../actions";
 import { setSocketId } from "../actions";
+import { ROUND_NUM } from 'types/types';
 
 const port = process.env.PORT 
 const socket = io("http://localhost:8888");
@@ -69,8 +70,8 @@ export const updateNickName = (nickName: string) => {
   socket.emit("UPDATE_NICKNAME", nickName);
 };
 
-export const startRound = () => {
-  socket.emit("START_ROUND");
+export const startRound = (currentRound: ROUND_NUM) => {
+  socket.emit("START_ROUND", currentRound);
 }
 
 export const rejoinGame = (nickname: string) => {

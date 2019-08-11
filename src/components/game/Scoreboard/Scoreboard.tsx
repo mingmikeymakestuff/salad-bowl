@@ -2,7 +2,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import StartRoundButton from "../StartRoundButton"
 import { getRounds, getCurrentRound } from "../../../selectors"
-import { ROUND_NUM, TEAM, Round, ROUND_STATUS } from 'types/types';
+import { ROUND_NUM, TEAM, Round } from '../../../types/types';
 
 interface ScoreboardStateProps {
   rounds: Round[];
@@ -17,7 +17,7 @@ class Scoreboard extends React.Component<ScoreboardStateProps, any> {
       const charades = rounds[ROUND_NUM.CHARADE_ROUND].score[TEAM.ONE];
       const password = rounds[ROUND_NUM.PASSWORD_ROUND].score[TEAM.ONE];
       return (    
-          <table className="table-sm table-bordered" style={{width:"40%", padding:"0", marginRight: "1rem"}}>
+          <table className="table-sm table-bordered" style={{width:"40%", padding:"0", marginRight:"1rem"}}>
             <thead>
             <tr>
                 <th scope="col" colSpan={2}>Team One</th>
@@ -104,11 +104,12 @@ class Scoreboard extends React.Component<ScoreboardStateProps, any> {
     public render() {
       return (
         <div>
-          <div>{this.currentRoundWord()}</div>
-          <div className="row" style={{paddingBottom:"1rem", margin: "0"}}>
+          <h1><u>{this.currentRoundWord()} Round</u></h1>
+          <div className="row" style={{paddingBottom:"2rem", margin: "0", justifyContent:"center"}}>
             {this.teamOneScores()}
             {this.teamTwoScores()}
           </div>
+          <h5>Any team and player may start the round</h5>
           <StartRoundButton currentRound={this.props.currentRound} currentRoundWord={this.currentRoundWord()}/>
         </div>
       );

@@ -20,5 +20,6 @@ export const getPlayerDataById = (
 export const getRoundStatus =  (state: RootState) => state.game.roundStatus;
 export const getCurrentRound = (state: RootState) => state.game.currentRound;
 export const getRounds = (state: RootState) => state.game.rounds;
+export const getPhrases = (state: RootState) => Array.from(state.game.phrases)
 export const getPhraseCount = (state: RootState) => state.game.phrases.length;
 export const getTimer = (state: RootState) => state.game.timer

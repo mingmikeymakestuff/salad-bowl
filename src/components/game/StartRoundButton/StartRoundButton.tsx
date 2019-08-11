@@ -1,6 +1,6 @@
 import * as React from "react";
 import { startRound } from "../../../socket";
-import { ROUND_STATUS } from 'types/types';
+import { ROUND_NUM } from 'types/types';
 
 class StartRoundButton extends React.Component<any, any> {
 
@@ -10,13 +10,15 @@ class StartRoundButton extends React.Component<any, any> {
     }
 
     public handleClick() {
-        startRound()
+        startRound(this.props.currentRound)
     }
 
     public render() {
-        return (
-            <button type="button" className="btn btn-primary" onClick={this.handleClick}>Start {this.props.currentRoundWord}</button>
-        );
+        if(this.props.currentRound !== ROUND_NUM.END) {
+            return (
+                <button type="button" className="btn btn-primary" onClick={this.handleClick}>Start {this.props.currentRoundWord}</button>
+            );
+        }
     }
 }
 

@@ -16,6 +16,7 @@ export enum ROUND_NUM {
   TABOO_ROUND = 0,
   CHARADE_ROUND = 1,
   PASSWORD_ROUND = 2,
+  END = 3
 }
 
 /* Voting and Team */

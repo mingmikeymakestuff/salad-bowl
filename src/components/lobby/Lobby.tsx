@@ -139,8 +139,8 @@ class Lobby extends React.Component<LobbyPropsFromState, LobbyState> {
     const teamTwoPlayers = playerList.filter(player => player.team === TEAM.TWO);
     const teamTwoTable = teamTwoPlayers.map(player => (<tr key={player.socketId}><td>{this.playerSelf(player.socketId)}{player.nickName}</td></tr>))
     return ( 
-      <div className="row" style={{width:"75%", paddingBottom:"1rem"}}>      
-        <table className="table-sm table-bordered" style={{width:"40%", padding:"0", marginRight: "1rem"}}>
+      <div className="row" style={{width:"80%", paddingBottom:"1rem", justifyContent:"center"}}>      
+        <table className="table-sm table-bordered" style={{width:"40%", padding:"0", marginRight:"1rem"}}>
           <thead>
             <tr>
               <th scope="col">Team One</th>

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import Scoreboard from "./Scoreboard";
+import PlayScreen from "./PlayScreen"
 import {
   getPlayers,
   getCurrentRound,
@@ -32,6 +33,8 @@ class Game extends React.Component<GameStateProps, any> {
       switch (roundStatus) {
         case ROUND_STATUS.SCORE_BOARD:
           return <Scoreboard />
+        case ROUND_STATUS.PLAYING:
+          return <PlayScreen />
       }
   
     }

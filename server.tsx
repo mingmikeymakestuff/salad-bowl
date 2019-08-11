@@ -291,12 +291,18 @@ io.on("connection", socket => {
     io.to(gameId).emit("UPDATE_GAME_STATE", getGameById(gameId));
   });
 
-  // Switch team of player
+  // Update timer of game 
   socket.on("UPDATE_TIMER", (timer: number) => {
-    const gameId = getGameIdBySocket(socket);
-    const game: Game = getGameById(gameId)
+    const game: Game = getGameBySocket(socket);
     game.timer = timer;
-    io.to(gameId).emit("UPDATE_GAME_STATE", getGameById(gameId));
+    io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
+  });
+
+  // Start this round
+  socket.on("START_ROUND", (currentRound: ROUND_NUM) => {
+    const game: Game = getGameBySocket(socket)
+    game.roundStatus = ROUND_STATUS.PLAYING;
+    io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
   });
 
   // Main menu button will send player back to main menu and remove that player from game
