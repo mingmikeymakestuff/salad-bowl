@@ -69,6 +69,10 @@ export const updateNickName = (nickName: string) => {
   socket.emit("UPDATE_NICKNAME", nickName);
 };
 
+export const startRound = () => {
+  socket.emit("START_ROUND");
+}
+
 export const rejoinGame = (nickname: string) => {
   socket.emit("REJOIN_GAME", nickname);
 };

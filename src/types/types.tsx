@@ -9,10 +9,7 @@ export enum GAME_STATUS {
 
 export enum ROUND_STATUS {
   SCORE_BOARD = "SCORE_BOARD", // Scoreboard, between switching teams, between rounds
-  TABOO_ROUND = "TABOO_ROUND", // Taboo round
-  CHARADE_ROUND = "CHARADE_ROUND", // Charades Round
-  PASSWORD_ROUND = "PASSWORD_ROUND", // One word Taboo round
-  GAME_END = "GAME_END", // End of game
+  PLAYING = "PLAYING", // Playing
 }
 
 export enum ROUND_NUM {
@@ -41,9 +38,9 @@ export interface Game {
   id: string;
   players: Player[];
   status?: GAME_STATUS;
-  roundStatus?: ROUND_STATUS;
+  roundStatus: ROUND_STATUS;
   currentRound: ROUND_NUM;
-  Rounds: Round[];
+  rounds: Round[];
   phrases: string[];
   phraseIndex: number;
   timer: number;

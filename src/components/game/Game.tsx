@@ -5,19 +5,19 @@ import {
   getPlayers,
   getCurrentRound,
   getPlayerData,
-  getRoundStatus,
   getCurrentPage,
-  getRounds
+  getRounds,
+  getRoundStatus
 } from "../../selectors";
-import { Player, ROUND_STATUS, ROUND_NUM, GAME_STATUS, Round } from "../../types/types";
+import { Player, ROUND_STATUS, GAME_STATUS, Round, ROUND_NUM } from "../../types/types";
 
 interface GameStateProps {
   id: string;
   players: Player[];
   status?: GAME_STATUS;
-  roundStatus?: ROUND_STATUS;
+  roundStatus: ROUND_STATUS
   currentRound: ROUND_NUM;
-  Rounds: Round[];
+  rounds: Round[];
   phrases: string[];
 }
 
@@ -27,27 +27,36 @@ class Game extends React.Component<GameStateProps, any> {
     super(props);
   }
 
-  public render() {
-    const { currentRound, roundStatus } = this.props;
-    switch (roundStatus) {
-      case ROUND_STATUS.SCORE_BOARD:
-        return <Scoreboard />
+  public getDisplay() {
+      const { roundStatus, currentRound,  rounds } = this.props;
+      switch (roundStatus) {
+        case ROUND_STATUS.SCORE_BOARD:
+          return <Scoreboard />
+      }
+  
     }
+  public render() {
+    return (
+      <div className="Game">
+        {this.getDisplay()}
+      </div>
+    );
   }
+
 }
 
 const mapStateToProps = state => {
   const players: Player[] = getPlayers(state);
-  const currentRound: number = getCurrentRound(state);
+  const currentRound: ROUND_NUM = getCurrentRound(state);
   const playerData: Player = getPlayerData(state);
 
   return {
     players,
     currentRound,
     playerData,
-    roundStatus: getRoundStatus(state),
     status: getCurrentPage(state),
-    Rounds: getRounds(state)
+    rounds: getRounds(state),
+    roundStatus: getRoundStatus(state)
   };
 };
 

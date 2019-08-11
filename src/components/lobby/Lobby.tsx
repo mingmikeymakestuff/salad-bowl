@@ -140,7 +140,7 @@ class Lobby extends React.Component<LobbyPropsFromState, LobbyState> {
     const teamTwoTable = teamTwoPlayers.map(player => (<tr key={player.socketId}><td>{this.playerSelf(player.socketId)}{player.nickName}</td></tr>))
     return ( 
       <div className="row" style={{width:"75%", paddingBottom:"1rem"}}>      
-        <table className="table-sm table-bordered" style={{width:"50%", padding:"0"}}>
+        <table className="table-sm table-bordered" style={{width:"40%", padding:"0", marginRight: "1rem"}}>
           <thead>
             <tr>
               <th scope="col">Team One</th>
@@ -150,7 +150,7 @@ class Lobby extends React.Component<LobbyPropsFromState, LobbyState> {
             {teamOneTable}
           </tbody>
         </table>
-        <table className="table-sm table-bordered" style={{width:"50%", padding:"0"}}>
+        <table className="table-sm table-bordered" style={{width:"40%", padding:"0"}}>
           <thead>
             <tr>
               <th scope="col">Team Two</th>

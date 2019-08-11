@@ -17,8 +17,8 @@ export const getPlayerDataById = (
   const players = state.game.players;
   return players.find(player => player.socketId === socketId);
 };
+export const getRoundStatus =  (state: RootState) => state.game.roundStatus;
 export const getCurrentRound = (state: RootState) => state.game.currentRound;
-export const getRoundStatus = (state: RootState) => state.game.roundStatus;
-export const getRounds = (state: RootState) => state.game.Rounds;
+export const getRounds = (state: RootState) => state.game.rounds;
 export const getPhraseCount = (state: RootState) => state.game.phrases.length;
 export const getTimer = (state: RootState) => state.game.timer
