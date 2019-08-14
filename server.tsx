@@ -152,6 +152,26 @@ const shuffle = (players: Player[]): Player[] => {
   return players;
 };
 
+const shufflePhrases = (phrases: string[]): string[] => {
+  let currentIndex = phrases.length;
+  let temporaryValue;
+  let randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = phrases[currentIndex];
+    phrases[currentIndex] = phrases[randomIndex];
+    phrases[randomIndex] = temporaryValue;
+  }
+
+  return phrases;
+};
+
 const balanceTeams = (gameId) => {
   const game: Game = gamesById[gameId];
   const numPlayers = game.players.length 
@@ -302,6 +322,10 @@ io.on("connection", socket => {
   socket.on("START_ROUND", (currentRound: ROUND_NUM) => {
     const game: Game = getGameBySocket(socket)
     game.roundStatus = ROUND_STATUS.PLAYING;
+    if(!game.rounds[game.currentRound].played[TEAM.ONE] && !game.rounds[game.currentRound].played[TEAM.TWO]) {
+      game.phrases = shufflePhrases(game.phrases)
+    }
+    game.actioner = getPlayerBySocket(socket)
     io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
   });
 

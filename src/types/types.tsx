@@ -45,6 +45,7 @@ export interface Game {
   phrases: string[];
   phraseIndex: number;
   timer: number;
+  actioner: Player[]
 }
 
 export interface Round {

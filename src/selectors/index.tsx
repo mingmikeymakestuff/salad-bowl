@@ -22,4 +22,6 @@ export const getCurrentRound = (state: RootState) => state.game.currentRound;
 export const getRounds = (state: RootState) => state.game.rounds;
 export const getPhrases = (state: RootState) => Array.from(state.game.phrases)
 export const getPhraseCount = (state: RootState) => state.game.phrases.length;
-export const getTimer = (state: RootState) => state.game.timer
+export const getTimer = (state: RootState) => state.game.timer;
+export const getPhraseIndex = (state: RootState) => state.game.phraseIndex;
+export const getActioner = (state: RootState) => state.game.actioner;

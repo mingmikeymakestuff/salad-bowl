@@ -22,7 +22,11 @@
   text-align: center;
   width: 90%;
   margin-left: 5%;
-  display: flex;
+}
+
+.ScreenTitle {
+  margin-top: 10%;
+  padding-bottom: 2rem;
 }
 /* Main Screens */
 

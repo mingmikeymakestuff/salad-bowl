@@ -104,7 +104,7 @@ class Scoreboard extends React.Component<ScoreboardStateProps, any> {
     public render() {
       return (
         <div>
-          <h1><u>{this.currentRoundWord()} Round</u></h1>
+          <h1 className="ScreenTitle"><u>{this.currentRoundWord()} Round</u></h1>
           <div className="row" style={{paddingBottom:"2rem", margin: "0", justifyContent:"center"}}>
             {this.teamOneScores()}
             {this.teamTwoScores()}
