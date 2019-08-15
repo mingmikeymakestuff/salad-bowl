@@ -26,7 +26,11 @@
 
 .ScreenTitle {
   margin-top: 10%;
-  padding-bottom: 2rem;
+  padding-bottom: 4rem;
+}
+
+.ScreenSpacing {
+  padding-bottom: 4rem;
 }
 /* Main Screens */
 

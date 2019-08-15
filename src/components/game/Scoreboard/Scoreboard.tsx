@@ -105,11 +105,11 @@ class Scoreboard extends React.Component<ScoreboardStateProps, any> {
       return (
         <div>
           <h1 className="ScreenTitle"><u>{this.currentRoundWord()} Round</u></h1>
-          <div className="row" style={{paddingBottom:"2rem", margin: "0", justifyContent:"center"}}>
+          <div className="ScreenSpacing row" style={{paddingBottom:"2rem", margin: "0", justifyContent:"center"}}>
             {this.teamOneScores()}
             {this.teamTwoScores()}
           </div>
-          <h5>Any team and player may start the round</h5>
+          <h5>Any team/player may start the round</h5>
           <StartRoundButton currentRound={this.props.currentRound} currentRoundWord={this.currentRoundWord()}/>
         </div>
       );

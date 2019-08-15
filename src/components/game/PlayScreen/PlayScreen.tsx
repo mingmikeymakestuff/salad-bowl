@@ -13,18 +13,27 @@ interface PlayScreenStateProps {
   actioner: Player;
 }
 
-class PlayScreen extends React.Component<PlayScreenStateProps, any> {
+interface PlayScreenState {
+  timer: number;
+  start: boolean;
+  phrases: string[]
+}
+
+class PlayScreen extends React.Component<PlayScreenStateProps, PlayScreenState> {
     public intervalHandle;
 
     constructor(props) {
       super(props);
       this.state = {
         timer: this.props.timer,
-        start: false
+        start: false,
+        phrases: this.props.phrases
       }
 
       this.startCountdown = this.startCountdown.bind(this);
       this.tick = this.tick.bind(this);
+      this.skipPhrase = this.skipPhrase.bind(this);
+      this.correctPhrase = this.correctPhrase.bind(this);
     }
 
 
@@ -55,6 +64,7 @@ class PlayScreen extends React.Component<PlayScreenStateProps, any> {
       this.setState({timer : secRemaining});
       if(secRemaining === 0) {
         clearInterval(this.intervalHandle);
+        // FIXME Go to scoreboard server
       }
     }
 
@@ -63,12 +73,25 @@ class PlayScreen extends React.Component<PlayScreenStateProps, any> {
       this.intervalHandle = setInterval(this.tick, 1000);
     }
 
+    public skipPhrase() {
+      this.state.phrases.push(this.state.phrases.splice(this.props.phraseIndex, 1)[0]);
+    }
+
+    public correctPhrase() {
+      return 5;
+    }
+
     public displayOptions() {
       if(this.state.start === false) {
-        return <button type="button" className="btn btn-primary" onClick={this.startCountdown}>Start Timer</button>;
+        return <button style={{marginTop:"3rem"}} type="button" className="btn btn-primary" onClick={this.startCountdown}>Start Timer</button>;
       }
       else {
-        return "Two buttons"
+        return (
+          <div style={{marginTop:"3rem"}}>
+            <button style={{margin:"1rem"}} type="button" className="btn btn-primary" onClick={this.skipPhrase}>Skip Phrase</button>
+            <button style={{margin:"1rem"}} type="button" className="btn btn-primary" onClick={this.correctPhrase}>Correct</button>
+          </div>
+        );
       }
     }
 
@@ -76,9 +99,9 @@ class PlayScreen extends React.Component<PlayScreenStateProps, any> {
       return (
         <div>
           <h1 className="ScreenTitle"><u>{this.currentRoundWord()} Round</u></h1>
-          <Timer style={{paddingBottom:"2rem"}} timer={this.state.timer}/>
-          <h4>{this.displayPhrase()}</h4>
-          <h3>{this.displayOptions()}</h3>
+          <Timer timer={this.state.timer}/>
+          <h3 className="ScreenSpacing" style={{wordBreak:"break-all"}}>{this.displayPhrase()}</h3>
+          <div>{this.displayOptions()}</div>
         </div>
       );
     }
