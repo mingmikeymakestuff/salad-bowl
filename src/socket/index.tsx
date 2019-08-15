@@ -74,6 +74,14 @@ export const startRound = (currentRound: ROUND_NUM) => {
   socket.emit("START_ROUND", currentRound);
 }
 
+export const correctGuess = () => {
+  socket.emit("CORRECT_GUESS");
+};
+
+export const timeUp = () => {
+  socket.emit("TIME_UP");
+};
+
 export const rejoinGame = (nickname: string) => {
   socket.emit("REJOIN_GAME", nickname);
 };

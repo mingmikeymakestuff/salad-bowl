@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { getCurrentRound, getPhrases, getTimer, getPhraseIndex, getPlayerData, getActioner } from "../../../selectors"
 import { ROUND_NUM, Player } from '../../../types/types';
 import Timer from "./Timer"
+import { correctGuess, timeUp } from '../../../socket';
 
 interface PlayScreenStateProps {
   currentRound: ROUND_NUM;
@@ -64,7 +65,7 @@ class PlayScreen extends React.Component<PlayScreenStateProps, PlayScreenState> 
       this.setState({timer : secRemaining});
       if(secRemaining === 0) {
         clearInterval(this.intervalHandle);
-        // FIXME Go to scoreboard server
+        timeUp()
       }
     }
 
@@ -78,7 +79,7 @@ class PlayScreen extends React.Component<PlayScreenStateProps, PlayScreenState> 
     }
 
     public correctPhrase() {
-      return 5;
+      correctGuess()
     }
 
     public displayOptions() {

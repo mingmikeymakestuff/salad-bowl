@@ -202,6 +202,17 @@ const addPhrase = (socket, phrase) => {
   const game: Game = getGameBySocket(socket);
   game.phrases.push(phrase);
 }
+
+const nextRound = (currentRound: ROUND_NUM) =>{
+  switch(currentRound) {
+    case ROUND_NUM.TABOO_ROUND:
+      return ROUND_NUM.CHARADE_ROUND;
+    case ROUND_NUM.CHARADE_ROUND:
+      return ROUND_NUM.PASSWORD_ROUND;
+    case ROUND_NUM.PASSWORD_ROUND:
+      return ROUND_NUM.END;
+  }
+}
 /* Game */
 
 
@@ -326,6 +337,29 @@ io.on("connection", socket => {
       game.phrases = shufflePhrases(game.phrases)
     }
     game.actioner = getPlayerBySocket(socket)
+    io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
+  });
+
+  // Update timer of game 
+  socket.on("TIME_UP", () => {
+    const game: Game = getGameBySocket(socket);
+    const player: Player = getPlayerBySocket(socket);
+    game.rounds[game.currentRound].played[player.team] = true;
+    io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
+  });
+
+  // Correct guess
+  socket.on("CORRECT_GUESS", () => {
+    const game: Game = getGameBySocket(socket)
+    game.phraseIndex++;
+    const player: Player = getPlayerBySocket(socket);
+    game.rounds[game.currentRound].score[player.team]++;
+    if(game.phraseIndex === game.phrases.length) {
+      game.roundStatus = ROUND_STATUS.SCORE_BOARD
+      game.rounds[game.currentRound].played[player.team] = true;
+      game.currentRound = nextRound(game.currentRound);
+      game.phraseIndex = 0;
+    }
     io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
   });
 
