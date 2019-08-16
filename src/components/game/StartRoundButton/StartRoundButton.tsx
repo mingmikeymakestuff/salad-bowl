@@ -14,11 +14,9 @@ class StartRoundButton extends React.Component<any, any> {
     }
 
     public render() {
-        if(this.props.currentRound !== ROUND_NUM.END) {
-            return (
-                <button type="button" className="btn btn-primary" onClick={this.handleClick}>Start {this.props.currentRoundWord}</button>
-            );
-        }
+        return (
+            <button type="button" className="btn btn-primary" onClick={this.handleClick}>Start {this.props.currentRoundWord}</button>
+        )
     }
 }
 

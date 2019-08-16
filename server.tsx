@@ -85,7 +85,8 @@ const createNewGame = () => {
     phrases: [],
     roundStatus: ROUND_STATUS.SCORE_BOARD,
     phraseIndex: 0,
-    timer: 60
+    timer: 60,
+    actioner: null
   };
   gamesById[id] = game;
   return id;
@@ -359,6 +360,7 @@ io.on("connection", socket => {
       game.rounds[game.currentRound].played[player.team] = true;
       game.currentRound = nextRound(game.currentRound);
       game.phraseIndex = 0;
+      game.actioner = null;
     }
     io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
   });

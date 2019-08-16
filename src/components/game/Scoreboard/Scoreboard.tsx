@@ -1,12 +1,14 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import StartRoundButton from "../StartRoundButton"
-import { getRounds, getCurrentRound } from "../../../selectors"
-import { ROUND_NUM, TEAM, Round } from '../../../types/types';
+import { getRounds, getCurrentRound, getPlayerData, getActioner } from "../../../selectors"
+import { ROUND_NUM, TEAM, Round, Player } from '../../../types/types';
 
 interface ScoreboardStateProps {
   rounds: Round[];
   currentRound: ROUND_NUM;
+  playerData: Player;
+  actioner: Player;
 }
 
 class Scoreboard extends React.Component<ScoreboardStateProps, any> {
@@ -91,26 +93,50 @@ class Scoreboard extends React.Component<ScoreboardStateProps, any> {
       const { currentRound } = this.props;
       switch(currentRound) {
         case ROUND_NUM.TABOO_ROUND:
-          return "Taboo"
+          return "Taboo Round"
         case ROUND_NUM.CHARADE_ROUND:
-          return "Charades"
+          return "Charades Round"
         case ROUND_NUM.PASSWORD_ROUND:
-          return "One Word Taboo"
+          return "One Word Taboo Round"
         default:
           return "Game Ended"
+      }
+    }
+
+    public displayStartButton() {
+      const { actioner, playerData } = this.props
+      if(this.props.currentRound !== ROUND_NUM.END) {
+        if(actioner === null) {
+         return <StartRoundButton currentRoundWord={this.currentRoundWord()} />
+        }
+        else {
+          if(playerData.team !== actioner.team) {
+            return <StartRoundButton currentRoundWord={this.currentRoundWord()} /> 
+          }
+        }
+      }
+    }
+
+    public displayTeamToStart() {
+      const played = this.props.rounds[this.props.currentRound].played
+      if(!played[TEAM.ONE] && !played[TEAM.TWO]) {
+        return "Any team/player may start the round"
+      }
+      if(this.props.actioner !== null) {
+        return this.props.actioner.team === TEAM.ONE ? "Team Two's Turn" : "Team One's Turn";
       }
     }
 
     public render() {
       return (
         <div>
-          <h1 className="ScreenTitle"><u>{this.currentRoundWord()} Round</u></h1>
+          <h1 className="ScreenTitle"><u>{this.currentRoundWord()}</u></h1>
           <div className="ScreenSpacing row" style={{paddingBottom:"2rem", margin: "0", justifyContent:"center"}}>
             {this.teamOneScores()}
             {this.teamTwoScores()}
           </div>
-          <h5>Any team/player may start the round</h5>
-          <StartRoundButton currentRound={this.props.currentRound} currentRoundWord={this.currentRoundWord()}/>
+          <h5>{this.displayTeamToStart()}</h5>
+          {this.displayStartButton()}
         </div>
       );
     }
@@ -119,7 +145,9 @@ class Scoreboard extends React.Component<ScoreboardStateProps, any> {
 const mapStateToProps = state => {
   return {
     rounds: getRounds(state),
-    currentRound: getCurrentRound(state)
+    currentRound: getCurrentRound(state),
+    playerData: getPlayerData(state),
+    actioner: getActioner(state)
   };
 };
   

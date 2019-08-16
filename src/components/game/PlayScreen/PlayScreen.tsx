@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { getCurrentRound, getPhrases, getTimer, getPhraseIndex, getPlayerData, getActioner } from "../../../selectors"
-import { ROUND_NUM, Player } from '../../../types/types';
+import { ROUND_NUM, Player, TEAM } from '../../../types/types';
 import Timer from "./Timer"
 import { correctGuess, timeUp } from '../../../socket';
 
@@ -96,9 +96,15 @@ class PlayScreen extends React.Component<PlayScreenStateProps, PlayScreenState> 
       }
     }
 
+    public displayTeam() {
+      const { actioner } = this.props
+      return actioner.team === TEAM.ONE ? "Team One" : "Team Two"
+    }
+
     public render() {
       return (
         <div>
+          <h1 ><u>{this.displayTeam()} is Guessing</u></h1>
           <h1 className="ScreenTitle"><u>{this.currentRoundWord()} Round</u></h1>
           <Timer timer={this.state.timer}/>
           <h3 className="ScreenSpacing" style={{wordBreak:"break-all"}}>{this.displayPhrase()}</h3>
