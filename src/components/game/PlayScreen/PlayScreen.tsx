@@ -83,16 +83,19 @@ class PlayScreen extends React.Component<PlayScreenStateProps, PlayScreenState> 
     }
 
     public displayOptions() {
-      if(this.state.start === false) {
-        return <button style={{marginTop:"3rem"}} type="button" className="btn btn-primary" onClick={this.startCountdown}>Start Timer</button>;
-      }
-      else {
-        return (
-          <div style={{marginTop:"3rem"}}>
-            <button style={{margin:"1rem"}} type="button" className="btn btn-primary" onClick={this.skipPhrase}>Skip Phrase</button>
-            <button style={{margin:"1rem"}} type="button" className="btn btn-primary" onClick={this.correctPhrase}>Correct</button>
-          </div>
-        );
+      if(this.props.actioner.socketId === this.props.playerData.socketId) {
+        if(this.state.start === false) {
+          
+          return <button style={{marginTop:"3rem"}} type="button" className="btn btn-primary" onClick={this.startCountdown}>Start Timer</button>;
+        }
+        else {
+          return (
+            <div style={{marginTop:"3rem"}}>
+              <button style={{margin:"1rem"}} type="button" className="btn btn-primary" onClick={this.skipPhrase}>Skip Phrase</button>
+              <button style={{margin:"1rem"}} type="button" className="btn btn-primary" onClick={this.correctPhrase}>Correct</button>
+            </div>
+          );
+        }
       }
     }
 
