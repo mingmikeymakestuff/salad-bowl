@@ -39,6 +39,10 @@ export const mainMenu = () => {
   socket.emit("MAIN_MENU");
 };
 
+export const resetToLobby = () => {
+  socket.emit("RESET_TO_LOBBY");
+};
+
 export const joinGame = gameId => {
   console.log(`Client joining game with id ${gameId}`);
   socket.emit("JOIN_GAME", gameId);

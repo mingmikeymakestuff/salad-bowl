@@ -2,7 +2,8 @@ import * as React from "react";
 import { connect } from "react-redux";
 import StartRoundButton from "../StartRoundButton"
 import { getRounds, getCurrentRound, getPlayerData, getActioner } from "../../../selectors"
-import { ROUND_NUM, TEAM, Round, Player } from '../../../types/types';
+import { ROUND_NUM, TEAM, Round, Player, ROUND_STATUS } from '../../../types/types';
+import MenuButton from "./MenuButton"
 
 interface ScoreboardStateProps {
   rounds: Round[];
@@ -103,7 +104,7 @@ class Scoreboard extends React.Component<ScoreboardStateProps, any> {
       }
     }
 
-    public displayStartButton() {
+    public displayStartOrLobbyButton() {
       const { actioner, playerData } = this.props
       if(this.props.currentRound !== ROUND_NUM.END) {
         if(actioner === null) {
@@ -115,9 +116,15 @@ class Scoreboard extends React.Component<ScoreboardStateProps, any> {
           }
         }
       }
+      else {
+        return <MenuButton />
+      }
     }
 
     public displayTeamToStart() {
+      if(this.props.currentRound === ROUND_NUM.END) {
+        return "Game Ended"
+      }
       const played = this.props.rounds[this.props.currentRound].played
       if(!played[TEAM.ONE] && !played[TEAM.TWO]) {
         return "Any team/player may start the round"
@@ -136,7 +143,7 @@ class Scoreboard extends React.Component<ScoreboardStateProps, any> {
             {this.teamTwoScores()}
           </div>
           <h5>{this.displayTeamToStart()}</h5>
-          {this.displayStartButton()}
+          {this.displayStartOrLobbyButton()}
         </div>
       );
     }

@@ -341,11 +341,12 @@ io.on("connection", socket => {
     io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
   });
 
-  // Update timer of game 
+  // Time is up
   socket.on("TIME_UP", () => {
     const game: Game = getGameBySocket(socket);
     const player: Player = getPlayerBySocket(socket);
     game.rounds[game.currentRound].played[player.team] = true;
+    game.roundStatus = ROUND_STATUS.SCORE_BOARD;
     io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
   });
 
@@ -379,6 +380,21 @@ io.on("connection", socket => {
       socket.emit("NAV_MAIN_MENU", {});
       console.log(socket.id + " left the game with gameId: " + gameId)
      }
+  });
+
+  // Lobby button on scoreboard will return to lobby
+  socket.on("RESET_TO_LOBBY", () => {
+    const game: Game = getGameBySocket(socket);
+    game.phrases = [];
+    game.roundStatus = ROUND_STATUS.SCORE_BOARD;
+    game.phraseIndex = 0;
+    game.actioner = null;
+    game.status = GAME_STATUS.LOBBY;
+    for(let i = ROUND_NUM.TABOO_ROUND; i < ROUND_NUM.END; i++) {
+      game.rounds[i].played = [false, false]
+      game.rounds[i].score = [0, 0]
+    }
+    io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
   });
 
   // Player rejoning game sets new socket id to all the right places
