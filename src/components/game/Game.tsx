@@ -29,7 +29,7 @@ class Game extends React.Component<GameStateProps, any> {
   }
 
   public getDisplay() {
-      const { roundStatus, currentRound,  rounds } = this.props;
+      const { roundStatus } = this.props;
       switch (roundStatus) {
         case ROUND_STATUS.SCORE_BOARD:
           return <Scoreboard />
