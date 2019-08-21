@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { getCurrentRound, getPhrases, getTimer, getPhraseIndex, getPlayerData, getActioner, getTimerCountdown } from "../../../selectors"
 import { ROUND_NUM, Player, TEAM } from '../../../types/types';
 import Timer from "./Timer"
-import { correctGuess, countdown } from '../../../socket';
+import { correctGuess, countdown, skipPhrase } from '../../../socket';
 
 interface PlayScreenStateProps {
   currentRound: ROUND_NUM;
@@ -66,7 +66,8 @@ class PlayScreen extends React.Component<PlayScreenStateProps, PlayScreenState> 
     }
 
     public skipPhrase() {
-      this.state.phrases.push(this.state.phrases.splice(this.props.phraseIndex, 1)[0]);
+      // this.state.phrases.push(this.state.phrases.splice(this.props.phraseIndex, 1)[0]);
+      skipPhrase()
     }
 
     public correctPhrase() {

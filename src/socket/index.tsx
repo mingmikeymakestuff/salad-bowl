@@ -82,6 +82,10 @@ export const correctGuess = () => {
   socket.emit("CORRECT_GUESS");
 };
 
+export const skipPhrase = () => {
+  socket.emit("SKIP_PHRASE");
+};
+
 export const countdown = () => {
   socket.emit("COUNTDOWN");
 };

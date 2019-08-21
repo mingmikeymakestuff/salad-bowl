@@ -204,7 +204,7 @@ const addPhrase = (socket, phrase) => {
   game.phrases.push(phrase);
 }
 
-const nextRound = (currentRound: ROUND_NUM) =>{
+const nextRound = (currentRound: ROUND_NUM) => {
   switch(currentRound) {
     case ROUND_NUM.TABOO_ROUND:
       return ROUND_NUM.CHARADE_ROUND;
@@ -213,6 +213,20 @@ const nextRound = (currentRound: ROUND_NUM) =>{
     case ROUND_NUM.PASSWORD_ROUND:
       return ROUND_NUM.END;
   }
+}
+
+const count = (socket) => {
+  const game: Game = getGameBySocket(socket);
+  game.intervalHandle = setInterval(function(){ 
+    game.timerCountdown--;
+    io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
+    if(game.timerCountdown === 0) {
+      const player: Player = getPlayerBySocket(socket);
+      game.rounds[game.currentRound].played[player.team] = true;
+      game.roundStatus = ROUND_STATUS.SCORE_BOARD;
+      clearInterval(game.intervalHandle);
+      io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
+    }}, 1000)
 }
 /* Game */
 
@@ -333,17 +347,7 @@ io.on("connection", socket => {
 
   // Countsdown timer 
   socket.on("COUNTDOWN", () => {
-    const game: Game = getGameBySocket(socket);
-    game.intervalHandle = setInterval(function(){ 
-      game.timerCountdown--;
-      io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
-      if(game.timerCountdown === 0) {
-        const player: Player = getPlayerBySocket(socket);
-        game.rounds[game.currentRound].played[player.team] = true;
-        game.roundStatus = ROUND_STATUS.SCORE_BOARD;
-        clearInterval(game.intervalHandle);
-        io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
-      }}, 1000)
+    count(socket);
   });
 
   // Start this round
@@ -358,22 +362,35 @@ io.on("connection", socket => {
     io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
   });
 
+  // Skip phrase
+  socket.on("SKIP_PHRASE", () => {
+    const game: Game = getGameBySocket(socket)
+    clearInterval(game.intervalHandle)
+    game.phrases.push(game.phrases.splice(game.phraseIndex, 1)[0]);
+    io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
+    count(socket)
+  });
+  
   // Correct guess
   socket.on("CORRECT_GUESS", () => {
     const game: Game = getGameBySocket(socket)
+    clearInterval(game.intervalHandle);
     game.phraseIndex++;
     const player: Player = getPlayerBySocket(socket);
     game.rounds[game.currentRound].score[player.team]++;
     if(game.phraseIndex === game.phrases.length) {
-      clearInterval(game.intervalHandle);
       game.roundStatus = ROUND_STATUS.SCORE_BOARD
       game.rounds[game.currentRound].played[player.team] = true;
       game.currentRound = nextRound(game.currentRound);
       game.phraseIndex = 0;
       game.actioner = null;
       game.timerCountdown = game.timer;
+      io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
     }
-    io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
+    else {
+      io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
+      count(socket);
+    }
   });
 
   // Main menu button will send player back to main menu and remove that player from game
