@@ -367,6 +367,7 @@ io.on("connection", socket => {
     const game: Game = getGameBySocket(socket)
     clearInterval(game.intervalHandle)
     game.phrases.push(game.phrases.splice(game.phraseIndex, 1)[0]);
+    game.timerCountdown--;
     io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
     count(socket)
   });
@@ -388,6 +389,7 @@ io.on("connection", socket => {
       io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
     }
     else {
+      game.timerCountdown--;
       io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
       count(socket);
     }
