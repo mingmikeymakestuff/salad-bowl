@@ -47,6 +47,7 @@ export interface Game {
   timer: number;
   timerCountdown: number;
   actioner: Player[];
+  intervalHandle: any;
 }
 
 export interface Round {

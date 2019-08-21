@@ -2,7 +2,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import StartRoundButton from "../StartRoundButton"
 import { getRounds, getCurrentRound, getPlayerData, getActioner } from "../../../selectors"
-import { ROUND_NUM, TEAM, Round, Player, ROUND_STATUS } from '../../../types/types';
+import { ROUND_NUM, TEAM, Round, Player } from '../../../types/types';
 import MenuButton from "./MenuButton"
 
 interface ScoreboardStateProps {

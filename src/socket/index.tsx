@@ -74,16 +74,16 @@ export const updateNickName = (nickName: string) => {
   socket.emit("UPDATE_NICKNAME", nickName);
 };
 
-export const startRound = (currentRound: ROUND_NUM) => {
-  socket.emit("START_ROUND", currentRound);
+export const startRound = () => {
+  socket.emit("START_ROUND");
 }
 
 export const correctGuess = () => {
   socket.emit("CORRECT_GUESS");
 };
 
-export const timeUp = () => {
-  socket.emit("TIME_UP");
+export const countdown = () => {
+  socket.emit("COUNTDOWN");
 };
 
 export const rejoinGame = (nickname: string) => {

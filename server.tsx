@@ -327,26 +327,34 @@ io.on("connection", socket => {
   socket.on("UPDATE_TIMER", (timer: number) => {
     const game: Game = getGameBySocket(socket);
     game.timer = timer;
+    game.timerCountdown = timer
     io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
   });
 
+  // Countsdown timer 
+  socket.on("COUNTDOWN", () => {
+    const game: Game = getGameBySocket(socket);
+    game.intervalHandle = setInterval(function(){ 
+      game.timerCountdown--;
+      io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
+      if(game.timerCountdown === 0) {
+        const player: Player = getPlayerBySocket(socket);
+        game.rounds[game.currentRound].played[player.team] = true;
+        game.roundStatus = ROUND_STATUS.SCORE_BOARD;
+        clearInterval(game.intervalHandle);
+        io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
+      }}, 1000)
+  });
+
   // Start this round
-  socket.on("START_ROUND", (currentRound: ROUND_NUM) => {
+  socket.on("START_ROUND", () => {
     const game: Game = getGameBySocket(socket)
     game.roundStatus = ROUND_STATUS.PLAYING;
     if(!game.rounds[game.currentRound].played[TEAM.ONE] && !game.rounds[game.currentRound].played[TEAM.TWO]) {
       game.phrases = shufflePhrases(game.phrases)
     }
     game.actioner = getPlayerBySocket(socket)
-    io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
-  });
-
-  // Time is up
-  socket.on("TIME_UP", () => {
-    const game: Game = getGameBySocket(socket);
-    const player: Player = getPlayerBySocket(socket);
-    game.rounds[game.currentRound].played[player.team] = true;
-    game.roundStatus = ROUND_STATUS.SCORE_BOARD;
+    game.timerCountdown = game.timer;
     io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
   });
 
@@ -357,11 +365,13 @@ io.on("connection", socket => {
     const player: Player = getPlayerBySocket(socket);
     game.rounds[game.currentRound].score[player.team]++;
     if(game.phraseIndex === game.phrases.length) {
+      clearInterval(game.intervalHandle);
       game.roundStatus = ROUND_STATUS.SCORE_BOARD
       game.rounds[game.currentRound].played[player.team] = true;
       game.currentRound = nextRound(game.currentRound);
       game.phraseIndex = 0;
       game.actioner = null;
+      game.timerCountdown = game.timer;
     }
     io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
   });
