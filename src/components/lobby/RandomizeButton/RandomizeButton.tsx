@@ -1,5 +1,5 @@
 import * as React from "react";
-import { randomizeTeams } from 'socket';
+import { randomizeTeams } from '../../../socket';
 
 class RandomizeButton extends React.Component<any, any> {
   constructor(props) {

@@ -1,6 +1,5 @@
 import * as React from "react";
-import { connect } from "react-redux";
-import { switchTeam } from 'socket';
+import { switchTeam } from '../../../socket';
 
 class SwitchTeamButton extends React.Component<any, any> {
   constructor(props) {
