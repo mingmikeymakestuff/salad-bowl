@@ -220,7 +220,7 @@ const count = (socket) => {
   game.intervalHandle = setInterval(function(){ 
     game.timerCountdown--;
     io.to(game.id).emit("UPDATE_GAME_STATE", getGameById(game.id));
-    if(game.timerCountdown === 0) {
+    if(game.timerCountdown <= 0) {
       const player: Player = getPlayerBySocket(socket);
       game.rounds[game.currentRound].played[player.team] = true;
       game.roundStatus = ROUND_STATUS.SCORE_BOARD;
