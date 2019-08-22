@@ -1,10 +1,9 @@
 import * as io from "socket.io-client";
 import { setGameData, navigateTo } from "../actions";
 import { setSocketId } from "../actions";
-import { ROUND_NUM } from 'types/types';
 
 const port = process.env.PORT 
-const socket = io("http://localhost:8888");
+const socket = io("https://mmbowl.herokuapp.com");
 export class SocketListener {
   constructor(store) {
     socket.on("JOINED_GAME", game => {

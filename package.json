@@ -40,9 +40,10 @@
   },
   "scripts": {
     "babel": "babel --presets es2015 js/main.js -o build/main.bundle.js",
-    "start": "react-scripts-ts start",
     "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "eject": "react-scripts-ts eject",
+    "start": "ts-node server.tsx",
+    "heroku-postbuild": "webpack -p"
   },
   "devDependencies": {
     "@types/jest": "^23.3.8",
